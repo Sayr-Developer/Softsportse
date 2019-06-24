@@ -10,24 +10,37 @@ public class Usuario {
     private byte[] foto;
     private String esporteFavorito;
     private String midiasSociais;
+    private int codEsporte;
 
-    public Usuario(){ }
+    public Usuario(byte[] foto) {
+        this.foto = foto;
+    }
 
-    public Usuario(int codUsuario, String nome, String sobrenome, String email, String senha, byte[] foto) {
+    public Usuario(String nome, String sobrenome, String email, String senha, int codEsporte) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.email = email;
+        this.senha = senha;
+        this.codEsporte = codEsporte;
+        this.foto = foto;
+    }
+
+    public Usuario(int codUsuario, String nome, String sobrenome, String email, String senha, byte[] foto, int codEsporte) {
         this.codUsuario = codUsuario;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.email = email;
         this.senha = senha;
         this.foto = foto;
+        this.codEsporte = codEsporte;
     }
 
-    public Usuario(String nome, String sobrenome, String email, String senha, byte[] foto) {
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.email = email;
-        this.senha = senha;
-        this.foto = foto;
+    public int getCodEsporte() {
+        return codEsporte;
+    }
+
+    public void setCodEsporte(int codEsporte) {
+        this.codEsporte = codEsporte;
     }
 
     public int getCodUsuario() {

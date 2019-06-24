@@ -134,7 +134,150 @@
             android:drawableRight="@drawable/ic_person"
             android:drawableEnd="@drawable/ic_person"
             />
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Esporte preferido:"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="18dp"
+            android:textSize="22sp"
+            android:textColor="#5e5e5e"
+            app:fontFamily="@font/helvetica_neue_light"/>
 
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="18dp"
+            android:scrollbars="none">
+
+        <RadioGroup
+                android:id="@+id/radioGroupCadastro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioFutebol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_futebol"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioBasquete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_basquete"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioTenis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_tenis"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioTenisDeMesa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_tenis_de_mesa"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioRugby"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_rugby"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioVolei"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_volei"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioSurf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_surf"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioSkate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_skate"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioCorrida"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#5e5e5e"
+                    app:fontFamily="@font/helvetica_neue_light"
+                    android:text="@string/btn_corrida"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+            </RadioGroup>
+
+        </android.support.v4.widget.NestedScrollView>
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edtEmail"
             android:layout_width="match_parent"

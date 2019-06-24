@@ -87,7 +87,7 @@ public class TelaInicialActivity extends AppCompatActivity implements Navigation
         db.inserirEsportes(new Esporte("Surf"));
         db.inserirEsportes(new Esporte("Skate"));
 
-
+        db.cadastrarSoftplayer(new Usuario("Enzo","Klin","enzo.klin@gmail.com","1234",1));
     }
 
     public void abrirActivityPerfil(View view){

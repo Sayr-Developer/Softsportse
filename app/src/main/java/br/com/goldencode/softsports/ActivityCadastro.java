@@ -1,11 +1,16 @@
 package br.com.goldencode.softsports;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +21,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,11 +32,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.UUID;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 public class ActivityCadastro extends AppCompatActivity{
 
@@ -47,11 +59,19 @@ public class ActivityCadastro extends AppCompatActivity{
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private ImageView circleFotoPerfil;
+    public int cod_esporte;
+    public String nome;
+    public String sobrenome;
+    public String email;
+    public String senha;
 
     //Firebase
     private static final int PICK_IMAGE_REQUEST = 1;
     FirebaseStorage storage;
     StorageReference storageReference;
+
+    //DB
+    private Softsports db = new Softsports(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +85,12 @@ public class ActivityCadastro extends AppCompatActivity{
         buttonCadastrar = (AppCompatButton) findViewById(R.id.btnCadastrar);
         buttonPerfil = (AppCompatButton) findViewById(R.id.btnFoto);
         circleFotoPerfil = (ImageView) findViewById(R.id.iconePerfil);
+
+
+        nome = editTextNome.getText().toString().trim();
+        sobrenome = editTextSobrenome.getText().toString().trim();
+        email = editTextEmail.getText().toString().trim();
+        senha = editTextSenha.getText().toString().trim();
 
         //Firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -103,21 +129,34 @@ public class ActivityCadastro extends AppCompatActivity{
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-    //Busca a imagem e insere na circleImageView
+
     @Override
+
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            //Busca a imagem e insere na circleImageView
             Uri fotoPerfilUri = data.getData();
-
-                circleFotoPerfil.setImageURI(fotoPerfilUri);
-                circleFotoPerfil.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                buttonPerfil.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_check_w));
-
+            circleFotoPerfil.setImageURI(fotoPerfilUri);
+            circleFotoPerfil.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+            buttonPerfil.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_check_w));
         }
+
     }
 
+        public String pegarCaminho(Uri uri)
+        {
+        if (uri == null) return null;
+        String[] projection= {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri,projection, null,null,null);
+        if(cursor!=null){
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        return uri.getPath();
+        }
         //Toast de sucesso personalizado
         public void toastSuccess(String mensagem){
 
@@ -167,10 +206,43 @@ public class ActivityCadastro extends AppCompatActivity{
     //Cadastra um novo usuário no BDD
     private void cadastrarUsuario(){
 
-        String nome = editTextNome.getText().toString();
-        String sobrenome = editTextSobrenome.getText().toString();
-        String email = editTextEmail.getText().toString().trim();
-        String senha = editTextSenha.getText().toString().trim();
+        RadioGroup radioesporte = (RadioGroup) findViewById(R.id.radioGroupCadastro);
+        switch (radioesporte.getCheckedRadioButtonId())
+        {
+            case R.id.radioFutebol:
+                cod_esporte = 1;
+                break;
+            case R.id.radioBasquete:
+                cod_esporte = 2;
+                break;
+            case R.id.radioTenis:
+                cod_esporte = 3;
+                break;
+            case R.id.radioTenisDeMesa:
+                cod_esporte = 4;
+                break;
+            case R.id.radioRugby:
+                cod_esporte = 5;
+                break;
+            case R.id.radioVolei:
+                cod_esporte = 6;
+                break;
+            case R.id.radioSurf:
+                cod_esporte = 7;
+                break;
+            case R.id.radioSkate:
+                cod_esporte = 8;
+                break;
+            case R.id.radioCorrida:
+                cod_esporte = 9;
+                break;
+
+        }
+
+        nome = editTextNome.getText().toString().trim();
+        sobrenome = editTextSobrenome.getText().toString().trim();
+        email = editTextEmail.getText().toString().trim();
+        senha = editTextSenha.getText().toString().trim();
 
         if (nome == null || TextUtils.isEmpty(nome)) {
             //se o campo senha estiver vazio
@@ -201,28 +273,46 @@ public class ActivityCadastro extends AppCompatActivity{
         }
 
         //se as validações estiverem ok
+
         //será mostrado o progressdialog
+
+        //Função que controla o progressdialog e cadastra o usuário:
 
         progressDialog.setMessage("Cadastrando usuário, aguarde.");
         progressDialog.show();
+        Runnable progressRunnable = new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.cancel();
 
-        //Fazer outro método usando o SQLite
-        firebaseAuth.createUserWithEmailAndPassword(email, senha)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //se o usuário for registrado com sucesso
-                        if(task.isSuccessful()){
-                            progressDialog.dismiss();
-                            finish();
-                            toastSuccess("Usuário cadastrado com sucesso!");
-                        } else {
-                            toastError("O usuário não pode ser cadastrado, tente novamente.");
-                            progressDialog.dismiss();
-                        }
+            }
+        };
 
+        Handler pdCanceller = new Handler();
+        pdCanceller.postDelayed(progressRunnable, 3000);
+
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                progressDialog.dismiss();
+                boolean verificacao = db.verificaemail(email);
+                if (verificacao == true) {
+                    boolean insert = db.cadastrarSoftplayer(new Usuario(nome, sobrenome, email, senha, cod_esporte));
+
+                    if (insert) {
+                        progressDialog.dismiss();
+                        finish();
+                        toastSuccess("Usuário cadastrado com sucesso!");
+                    } else {
+                        toastError("O usuário não pode ser cadastrado, tente novamente.");
+                        progressDialog.dismiss();
                     }
-                });
+                }
+                else{
+                    toastError("Usuário Já Cadastrado, Efetue Login");
+                }
+            }
+        });
 
     }
 
